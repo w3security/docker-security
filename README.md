@@ -1,4 +1,4 @@
-Docker security configuration
+# Docker security configuration
 
 Before deploying to a production environment, you should replace the demo security certificates and configuration YAML files with your own. With the RPM and Debian installations, you have direct access to the file system, but the Docker image requires modifying the Docker Compose file to include the replacement files.
 
