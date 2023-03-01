@@ -5,6 +5,7 @@ Before deploying to a production environment, you should replace the demo securi
 Additionally, you can set the Docker environment variable DISABLE_INSTALL_DEMO_CONFIG to true. This change completely disables the demo installer.
 Sample Docker Compose file
 
+```bash
 version: '3'
 services:
   odfe-node1:
@@ -97,9 +98,13 @@ volumes:
 
 networks:
   odfe-net:
+  
+  ```
 
 Then make your changes to elasticsearch.yml. For a full list of settings, see Security. This example adds (extremely) verbose audit logging:
 
+
+```bash
 opendistro_security.ssl.transport.pemcert_filepath: node.pem
 opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
 opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
@@ -121,30 +126,40 @@ cluster.routing.allocation.disk.threshold_enabled: false
 opendistro_security.audit.config.disabled_rest_categories: NONE
 opendistro_security.audit.config.disabled_transport_categories: NONE
 
-Use this same override process to specify new authentication settings in /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/config.yml, as well as new internal users, roles, mappings, action groups, and tenants.
+  ```
 
-To start the cluster, run docker-compose up.
+Use this same override process to specify new authentication settings in ```bash /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/config.yml ```, as well as new internal users, roles, mappings, action groups, and tenants.
 
-If you encounter any File /usr/share/elasticsearch/config/elasticsearch.yml has insecure file permissions (should be 0600) messages, you can use chmod to set file permissions before running docker-compose up. Docker Compose passes files to the container as-is.
+To start the cluster, run ```bash docker-compose up ```.
+
+If you encounter any```bash File /usr/share/elasticsearch/config/elasticsearch.yml ```has insecure file permissions (should be 0600) messages, you can use ```bash chmod ``` to set file permissions before running ```bash docker-compose up ```. Docker Compose passes files to the container as-is.
 
 Finally, you can open Kibana at http://localhost:5601, sign in, and use the Security panel to perform other management tasks.
 Using certificates with Docker
 
 To use your own certificates in your configuration, add all of the necessary certificates to the volumes section of the Docker Compose file:
-
+```bash
 volumes:
 - ./root-ca.pem:/full/path/to/certificate.pem
 - ./admin.pem:/full/path/to/certificate.pem
 - ./admin-key.pem:/full/path/to/certificate.pem
 #Add other certificates
 
+```
+
 After replacing the demo certificates with your own, you must also include a custom elasticsearch.yml in your setup, which you need to specify in the volumes section.
+
+```bash
 
 volumes:
 #Add certificates here
 - ./custom-elasticsearch.yml: /full/path/to/custom-elasticsearch.yml
 
+```
+
 Remember that the certificates you specify in your Docker Compose file must be the same as the certificates listed in your custom elasticsearch.yml file. At a minimum, you should replace the root, admin, and node certificates with your own. For more information about adding and using certificates, see Configure TLS certificates.
+
+```bash
 
 opendistro_security.ssl.transport.pemcert_filepath: new-node-cert.pem
 opendistro_security.ssl.transport.pemkey_filepath: new-node-cert-key.pem
@@ -154,5 +169,7 @@ opendistro_security.ssl.http.pemkey_filepath: new-node-cert-key.pem
 opendistro_security.ssl.http.pemtrustedcas_filepath: new-root-ca.pem
 opendistro_security.authcz.admin_dn:
   - CN=admin,OU=SSL,O=Test,L=Test,C=DE
+  
+ ```
 
-To start the cluster, run docker-compose up as usual.
+To start the cluster, run ```bash docker-compose up ``` as usual.
